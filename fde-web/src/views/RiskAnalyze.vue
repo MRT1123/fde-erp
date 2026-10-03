@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
-import { Search, RefreshRight } from '@element-plus/icons-vue'
+import { Search } from '@element-plus/icons-vue'
 import { analyzeRisk } from '../api/client'
 import type { AnalyzeRequest, AnalyzeResponse, SupplierReport, AnomalyAlert } from '../api/types'
 
@@ -41,23 +41,6 @@ async function run() {
   }
 }
 
-function fillDemo() {
-  Object.assign(form, {
-    request_id: Math.floor(Math.random() * 9000) + 1000,
-    title: '采购交换机 8 台',
-    department: '网络部',
-    applicant: '李强',
-    supplier_id: 1,
-    supplier_name: '测试供应商A',
-    supplier_credit_score: 85,
-    supplier_risk_level: 'low',
-    total_amount: 80000,
-    purpose: '办公网络改造升级',
-    first_cooperation: true,
-    budget_limit: 100000,
-    items: [{ material_name: '交换机', quantity: 8, unit_price: 10000 }],
-  })
-}
 
 const final = computed(() => (result.value?.final_result || result.value || {}) as Record<string, unknown>)
 const riskScore = computed(() => Number(final.value.risk_score ?? 0))
@@ -107,7 +90,6 @@ const decisionText = computed(() => {
       <template #header>
         <div class="card-head">
           <span class="card-title">采购申请信息</span>
-          <el-button size="small" :icon="RefreshRight" @click="fillDemo">填入示例</el-button>
         </div>
       </template>
       <el-form label-width="90px" label-position="left">

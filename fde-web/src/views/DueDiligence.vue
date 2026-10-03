@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import { Search, RefreshRight } from '@element-plus/icons-vue'
+import { Search } from '@element-plus/icons-vue'
 import { dueDiligence } from '../api/client'
 import type { DueDiligenceReport } from '../api/types'
 
@@ -26,12 +26,6 @@ async function run() {
   }
 }
 
-function fillDemo() {
-  Object.assign(form, {
-    supplier_id: 2,
-    supplier_name: '华信科技',
-  })
-}
 
 const riskLevel = () => result.value?.risk_level || 'unknown'
 const levelTag = () => {
@@ -55,7 +49,6 @@ const levelText = () => {
       <template #header>
         <div class="card-head">
           <span class="card-title">供应商尽调输入</span>
-          <el-button size="small" :icon="RefreshRight" @click="fillDemo">填入示例</el-button>
         </div>
       </template>
       <el-form label-width="110px" label-position="left">

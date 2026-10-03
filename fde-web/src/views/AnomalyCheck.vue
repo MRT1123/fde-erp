@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import { Search, Plus, Delete, RefreshRight } from '@element-plus/icons-vue'
+import { Search, Plus, Delete } from '@element-plus/icons-vue'
 import { anomalyCheck } from '../api/client'
 import type { AnomalyCheckResult, HistoryRecord } from '../api/types'
 
@@ -34,13 +34,6 @@ async function run() {
   }
 }
 
-function fillDemo() {
-  rows.value = [
-    { supplier_id: 1, amount: 10000, created_at: '2026-09-01', title: '采购 A 物料' },
-    { supplier_id: 1, amount: 12000, created_at: '2026-09-15', title: '采购 A 物料' },
-    { supplier_id: 1, amount: 15000, created_at: '2026-09-28', title: '采购 A 物料' },
-  ]
-}
 
 const sevTag = (s?: string) => {
   if (s === 'high') return 'danger'
@@ -61,7 +54,6 @@ const typeText = (t?: string) => {
         <div class="card-head">
           <span class="card-title">历史采购记录</span>
           <div>
-            <el-button size="small" :icon="RefreshRight" @click="fillDemo">填入示例</el-button>
             <el-button size="small" type="primary" plain :icon="Plus" @click="addRow">添加一行</el-button>
           </div>
         </div>

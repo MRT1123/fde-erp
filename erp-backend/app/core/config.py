@@ -21,7 +21,8 @@ class Settings(BaseSettings):
     JWT_ALGORITHM: str = "HS256"
 
     # 数据库
-    DATABASE_URL: str = "postgresql+asyncpg://erp:erp_pass@localhost:5432/erp_db"
+    # 数据库：开发默认 SQLite（零外部依赖）；生产/容器用环境变量覆盖为 PostgreSQL
+    DATABASE_URL: str = "sqlite+aiosqlite:///./erp_dev.db"
 
     # Redis / Celery
     REDIS_URL: str = "redis://localhost:6379/0"
