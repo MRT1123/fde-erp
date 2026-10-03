@@ -9,7 +9,7 @@ for %%P in (8000 8001 5173 5174) do (
     taskkill /PID %%a /F >nul 2>&1
   )
 )
-timeout /t 2 >nul
+ping -n 3 127.0.0.1 >nul
 
 echo [1/4] Starting ERP Backend :8000 ...
 start "ERP-Backend :8000" cmd /k "cd /d D:\erp\erp-backend && C:\Users\Administrator\AppData\Local\Programs\Python\Python314\python.exe -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --log-level info"
