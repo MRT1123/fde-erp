@@ -70,6 +70,8 @@
 ├── scripts/
 │   └── seed_data.py        # 演示数据种子脚本
 ├── docker-compose.yml      # 一键容器化部署
+├── start-all.cmd           # Windows 一键启动（后端×2 + 前端×2）
+├── stop-all.cmd            # Windows 一键停止
 ├── .env.example            # 环境变量模板
 └── .github/workflows/      # GitHub Actions CI
 ```
@@ -89,7 +91,17 @@ docker compose up --build
 - ERP 前端：http://localhost:5173
 - 健康检查：`curl http://localhost:8000/health`
 
-### 方式二：本地开发
+### 方式二：Windows 一键启动（本地测试推荐）
+
+```cmd
+start-all.cmd     # 一键启动：自动按端口停旧，拉起 后端×2 + 前端×2 独立窗口
+stop-all.cmd      # 一键停止：按端口 8000/8001/5173/5174 全部停止
+```
+
+- 默认使用 SQLite（`erp_dev.db`），**零外部依赖**，无需安装 Postgres/Redis，双击即用；
+- 启动后同上：ERP API :8000、Agent 服务 :8001、ERP 前端 http://localhost:5173、FDE 前端 http://localhost:5174。
+
+### 方式三：手动本地开发
 
 需要 Python 3.12+ 与 Node.js 18+。
 
