@@ -1,0 +1,1282 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FDE + ERP 智能采购风控系统 · 项目方案</title>
+<style>
+:root {
+  --canvas: #faf9f7;
+  --surface: #ffffff;
+  --surface-alt: #f4f2ef;
+  --text-primary: #1a1a1a;
+  --text-secondary: #55524d;
+  --text-tertiary: #8a8580;
+  --border: #e0ddd8;
+  --border-light: #ece9e4;
+  --accent: #1a6b5a;
+  --accent-light: #e8f4f0;
+  --accent-ink: #ffffff;
+  --warning: #b8860b;
+  --warning-light: #fdf6e3;
+  --danger: #c0392b;
+  --danger-light: #fdf0ee;
+  --info: #2874a6;
+  --info-light: #eaf2f8;
+  --code-bg: #2b2b2b;
+  --code-text: #e6e1dc;
+  --font-body: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --line-height: 1.7;
+  --content-width: 880px;
+  --wide-width: 1060px;
+  --gap-section: 3.5rem;
+  --gap-block: 2rem;
+  --radius: 6px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--canvas);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: var(--line-height);
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+
+/* Layout */
+.page-wrap {
+  max-width: var(--wide-width);
+  margin: 0 auto;
+  padding: 2rem clamp(1rem, 4vw, 3rem);
+}
+
+header.page-header {
+  padding: 3rem 0 2rem;
+  border-bottom: 2px solid var(--accent);
+  margin-bottom: var(--gap-section);
+}
+
+header.page-header h1 {
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.25;
+  margin: 0 0 0.75rem;
+  letter-spacing: -0.02em;
+}
+
+header.page-header .subtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+header.page-header .meta {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+}
+
+header.page-header .meta span { display: inline-flex; align-items: center; gap: 0.35rem; }
+
+/* Table of Contents */
+nav.toc {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem 2rem;
+  margin-bottom: var(--gap-section);
+}
+
+nav.toc h2 {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-tertiary);
+  margin: 0 0 0.75rem;
+}
+
+nav.toc ol {
+  margin: 0;
+  padding-left: 1.25rem;
+  columns: 2;
+  column-gap: 2rem;
+}
+
+nav.toc li { margin-bottom: 0.35rem; font-size: 0.95rem; }
+
+/* Sections */
+main section {
+  margin-bottom: var(--gap-section);
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 1.75rem 0 0.75rem;
+  color: var(--text-primary);
+}
+
+h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 1.25rem 0 0.5rem;
+  color: var(--text-secondary);
+}
+
+p { margin: 0 0 1rem; }
+
+/* Tables */
+.table-wrap {
+  overflow-x: auto;
+  margin: 1rem 0 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.925rem;
+}
+
+th {
+  background: var(--surface-alt);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.65rem 1rem;
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+
+td {
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--border-light);
+  vertical-align: top;
+}
+
+tr:last-child td { border-bottom: none; }
+
+/* Lists */
+ul, ol { padding-left: 1.5rem; margin: 0 0 1rem; }
+li { margin-bottom: 0.35rem; }
+li > ul, li > ol { margin-bottom: 0; }
+
+/* Code */
+code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--surface-alt);
+  padding: 0.15em 0.4em;
+  border-radius: 3px;
+  border: 1px solid var(--border-light);
+}
+
+pre {
+  background: var(--code-bg);
+  color: var(--code-text);
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--radius);
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  margin: 1rem 0 1.5rem;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  border: none;
+  color: inherit;
+  font-size: inherit;
+}
+
+/* Callouts */
+.callout {
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius);
+  margin: 1rem 0 1.5rem;
+  font-size: 0.95rem;
+  border-left: 4px solid;
+}
+
+.callout.info { background: var(--info-light); border-color: var(--info); }
+.callout.warning { background: var(--warning-light); border-color: var(--warning); }
+.callout.danger { background: var(--danger-light); border-color: var(--danger); }
+.callout.accent { background: var(--accent-light); border-color: var(--accent); }
+
+.callout strong { display: block; margin-bottom: 0.25rem; }
+
+/* Diagram (SVG) */
+.diagram-container {
+  margin: 1.5rem 0;
+  text-align: center;
+}
+
+.diagram-container svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.diagram-caption {
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+/* Status flow */
+.status-flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem 0 1.5rem;
+  font-size: 0.9rem;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.status-badge.pending { background: #fff3cd; color: #856404; }
+.status-badge.active { background: #cce5ff; color: #004085; }
+.status-badge.approved { background: #d4edda; color: #155724; }
+.status-badge.rejected { background: #f8d7da; color: #721c24; }
+.status-badge.withdrawn { background: #e2e3e5; color: #383d41; }
+.status-badge.timeout { background: #ffeeba; color: #856404; }
+
+.arrow { color: var(--text-tertiary); font-size: 1.1rem; }
+
+/* Grid */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.grid-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+}
+
+.grid-card h4 {
+  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
+  color: var(--accent);
+}
+
+.grid-card p, .grid-card ul {
+  font-size: 0.9rem;
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+/* Phase timeline */
+.phase-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 1.5rem;
+  counter-reset: phase;
+}
+
+.phase-list li {
+  counter-increment: phase;
+  padding: 1rem 1.25rem 1rem 3.5rem;
+  position: relative;
+  border-left: 2px solid var(--border);
+  margin-left: 1rem;
+  margin-bottom: 0;
+}
+
+.phase-list li::before {
+  content: counter(phase);
+  position: absolute;
+  left: -0.85rem;
+  top: 0.9rem;
+  width: 1.6rem;
+  height: 1.6rem;
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.phase-list li strong { display: block; margin-bottom: 0.25rem; }
+
+/* Footer */
+footer.page-footer {
+  margin-top: var(--gap-section);
+  padding: 2rem 0;
+  border-top: 1px solid var(--border);
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
+}
+
+/* Print */
+@media print {
+  body { background: white; font-size: 11pt; }
+  .page-wrap { max-width: none; padding: 0; }
+  nav.toc { break-after: page; }
+  pre { border: 1px solid #ccc; white-space: pre-wrap; }
+  a { color: inherit; text-decoration: underline; }
+  h2 { break-after: avoid; }
+  table, pre, .callout { break-inside: avoid; }
+}
+
+@media (max-width: 640px) {
+  nav.toc ol { columns: 1; }
+  .grid-2 { grid-template-columns: 1fr; }
+  header.page-header .meta { flex-direction: column; gap: 0.5rem; }
+}
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+<header class="page-header">
+  <h1>FDE + ERP 智能采购风控系统</h1>
+  <p class="subtitle">Forward Deployed Engineering 面试项目 · 完整技术方案</p>
+  <div class="meta">
+    <span>版本：v2.0</span>
+    <span>日期：2026-10-01</span>
+    <span>技术栈：FastAPI · LangGraph · PostgreSQL · 飞书 · Docker</span>
+  </div>
+</header>
+
+<nav class="toc" aria-label="目录">
+  <h2>目录</h2>
+  <ol>
+    <li><a href="#section-1">项目概述</a></li>
+    <li><a href="#section-2">系统架构</a></li>
+    <li><a href="#section-3">ERP 核心模块</a></li>
+    <li><a href="#section-4">FDE Agent 系统</a></li>
+    <li><a href="#section-5">高风险人工审批功能</a></li>
+    <li><a href="#section-6">飞书集成</a></li>
+    <li><a href="#section-7">技术选型</a></li>
+    <li><a href="#section-8">Docker 容器化部署</a></li>
+    <li><a href="#section-9">GitHub 发布计划</a></li>
+    <li><a href="#section-10">面试亮点设计</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- 1. 项目概述 -->
+<section id="section-1">
+<h2>一、项目概述</h2>
+
+<h3>1.1 什么是 FDE？</h3>
+<p><strong>Forward Deployed Engineer（前线部署工程师）</strong>是 AI 公司派驻到客户现场、将 AI 技术嵌入真实业务流程的岗位。最早由 Palantir 推广，目前 OpenAI、Anthropic、月之暗面（Kimi）等头部 AI 公司均采用此模式。</p>
+<p>FDE 的核心工作不是「做功能」，而是<strong>让复杂技术在真实客户业务中产生可衡量的价值</strong>。典型工作包括：</p>
+<ul>
+  <li>深入客户现场，理解真实业务流程与痛点</li>
+  <li>拆解业务流程，定义数据流与 AI 嵌入点</li>
+  <li>对接客户遗留系统（ERP、OA、CRM 等）</li>
+  <li>用 Agent/LLM 编排解决具体业务问题</li>
+  <li>快速迭代 MVP，持续与客户共创</li>
+</ul>
+
+<h3>1.2 什么是 ERP？</h3>
+<p>本项目中的 ERP 是一个<strong>轻量级采购管理系统</strong>，聚焦采购流程的核心环节：采购申请、审批、订单、收货、付款。它与飞书深度联动，利用飞书的审批流、消息通知和多维表格实现轻量化运营。</p>
+
+<h3>1.3 为什么两者联动？</h3>
+<p>FDE 的核心能力是「把 AI 嵌入业务流程」。本项目的联动设计模拟了真实 FDE 工作场景：</p>
+
+<div class="grid-2">
+  <div class="grid-card">
+    <h4>ERP 提供什么</h4>
+    <ul>
+      <li>真实业务流程（采购审批链路）</li>
+      <li>结构化业务数据（采购单、供应商、物料）</li>
+      <li>遗留系统集成模式（RESTful API）</li>
+    </ul>
+  </div>
+  <div class="grid-card">
+    <h4>FDE 提供什么</h4>
+    <ul>
+      <li>AI Agent 嵌入业务流程</li>
+      <li>智能风险识别与决策辅助</li>
+      <li>人机协作的审批工作流</li>
+    </ul>
+  </div>
+</div>
+
+<div class="callout accent">
+  <strong>联动闭环</strong>
+  ERP 产生业务数据 → FDE Agent 读取并分析 → 生成风险判断和决策建议 → 路由到人工审批（高风险）或自动通过（低风险）→ 结果回写 ERP 并推送飞书通知。
+</div>
+</section>
+
+<!-- 2. 系统架构 -->
+<section id="section-2">
+<h2>二、系统架构</h2>
+
+<div class="diagram-container">
+<svg viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="arch-title arch-desc">
+  <title id="arch-title">系统架构图</title>
+  <desc id="arch-desc">展示 ERP 后端、FDE Agent 系统、飞书集成和数据库之间的关系</desc>
+  
+  <!-- ERP Section -->
+  <rect x="30" y="30" width="240" height="180" rx="8" fill="#e8f4f0" stroke="#1a6b5a" stroke-width="1.5"/>
+  <text x="150" y="58" text-anchor="middle" font-size="14" font-weight="700" fill="#1a6b5a">ERP 后端</text>
+  <text x="150" y="80" text-anchor="middle" font-size="11" fill="#55524d">FastAPI + SQLAlchemy</text>
+  <rect x="50" y="95" width="200" height="28" rx="4" fill="#fff" stroke="#1a6b5a" stroke-width="1"/>
+  <text x="150" y="114" text-anchor="middle" font-size="11" fill="#1a1a1a">采购管理 API</text>
+  <rect x="50" y="130" width="200" height="28" rx="4" fill="#fff" stroke="#1a6b5a" stroke-width="1"/>
+  <text x="150" y="149" text-anchor="middle" font-size="11" fill="#1a1a1a">库存管理 API</text>
+  <rect x="50" y="165" width="200" height="28" rx="4" fill="#fff" stroke="#1a6b5a" stroke-width="1"/>
+  <text x="150" y="184" text-anchor="middle" font-size="11" fill="#1a1a1a">供应商管理 API</text>
+
+  <!-- Agent Section -->
+  <rect x="330" y="30" width="240" height="280" rx="8" fill="#fdf6e3" stroke="#b8860b" stroke-width="1.5"/>
+  <text x="450" y="58" text-anchor="middle" font-size="14" font-weight="700" fill="#b8860b">FDE Agent 系统</text>
+  <text x="450" y="78" text-anchor="middle" font-size="11" fill="#55524d">LangGraph 编排</text>
+  <rect x="350" y="95" width="200" height="28" rx="4" fill="#fff" stroke="#b8860b" stroke-width="1"/>
+  <text x="450" y="114" text-anchor="middle" font-size="11" fill="#1a1a1a">风险分析 Agent</text>
+  <rect x="350" y="130" width="200" height="28" rx="4" fill="#fff" stroke="#b8860b" stroke-width="1"/>
+  <text x="450" y="149" text-anchor="middle" font-size="11" fill="#1a1a1a">供应商尽调 Agent</text>
+  <rect x="350" y="165" width="200" height="28" rx="4" fill="#fff" stroke="#b8860b" stroke-width="1"/>
+  <text x="450" y="184" text-anchor="middle" font-size="11" fill="#1a1a1a">审批建议 Agent</text>
+  <rect x="350" y="200" width="200" height="28" rx="4" fill="#fff" stroke="#b8860b" stroke-width="1"/>
+  <text x="450" y="219" text-anchor="middle" font-size="11" fill="#1a1a1a">异常检测 Agent</text>
+  <rect x="350" y="245" width="200" height="48" rx="4" fill="#b8860b" stroke="none"/>
+  <text x="450" y="266" text-anchor="middle" font-size="11" font-weight="600" fill="#fff">LangGraph 状态机</text>
+  <text x="450" y="282" text-anchor="middle" font-size="10" fill="#fff">路由 · 编排 · 人机协作</text>
+
+  <!-- Feishu Section -->
+  <rect x="630" y="30" width="240" height="180" rx="8" fill="#eaf2f8" stroke="#2874a6" stroke-width="1.5"/>
+  <text x="750" y="58" text-anchor="middle" font-size="14" font-weight="700" fill="#2874a6">飞书集成</text>
+  <text x="750" y="78" text-anchor="middle" font-size="11" fill="#55524d">飞书开放平台 API</text>
+  <rect x="650" y="95" width="200" height="28" rx="4" fill="#fff" stroke="#2874a6" stroke-width="1"/>
+  <text x="750" y="114" text-anchor="middle" font-size="11" fill="#1a1a1a">审批流</text>
+  <rect x="650" y="130" width="200" height="28" rx="4" fill="#fff" stroke="#2874a6" stroke-width="1"/>
+  <text x="750" y="149" text-anchor="middle" font-size="11" fill="#1a1a1a">消息通知</text>
+  <rect x="650" y="165" width="200" height="28" rx="4" fill="#fff" stroke="#2874a6" stroke-width="1"/>
+  <text x="750" y="184" text-anchor="middle" font-size="11" fill="#1a1a1a">多维表格</text>
+
+  <!-- Database -->
+  <rect x="30" y="260" width="240" height="60" rx="8" fill="#f4f2ef" stroke="#8a8580" stroke-width="1.5"/>
+  <text x="150" y="286" text-anchor="middle" font-size="13" font-weight="600" fill="#55524d">PostgreSQL</text>
+  <text x="150" y="306" text-anchor="middle" font-size="10" fill="#8a8580">业务数据 · 审批记录 · 审计日志</text>
+
+  <!-- Human -->
+  <rect x="630" y="260" width="240" height="60" rx="8" fill="#fdf0ee" stroke="#c0392b" stroke-width="1.5"/>
+  <text x="750" y="286" text-anchor="middle" font-size="13" font-weight="600" fill="#c0392b">人工审批</text>
+  <text x="750" y="306" text-anchor="middle" font-size="10" fill="#8a8580">高风险采购单 · 飞书审批流</text>
+
+  <!-- Arrows -->
+  <line x1="270" y1="120" x2="330" y2="120" stroke="#55524d" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <line x1="330" y1="160" x2="270" y2="160" stroke="#55524d" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <line x1="570" y1="120" x2="630" y2="120" stroke="#55524d" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <line x1="630" y1="160" x2="570" y2="160" stroke="#55524d" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <line x1="150" y1="260" x2="150" y2="210" stroke="#55524d" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <line x1="450" y1="310" x2="450" y2="355" stroke="none"/>
+  <line x1="750" y1="260" x2="750" y2="210" stroke="#55524d" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <line x1="730" y1="210" x2="730" y2="260" stroke="#55524d" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+  <!-- Labels on arrows -->
+  <text x="300" y="112" text-anchor="middle" font-size="9" fill="#8a8580">采购数据</text>
+  <text x="300" y="175" text-anchor="middle" font-size="9" fill="#8a8580">分析结果</text>
+  <text x="600" y="112" text-anchor="middle" font-size="9" fill="#8a8580">审批请求</text>
+  <text x="600" y="175" text-anchor="middle" font-size="9" fill="#8a8580">审批结果</text>
+
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#55524d"/>
+    </marker>
+  </defs>
+</svg>
+<p class="diagram-caption">图 1：系统整体架构 — ERP 后端、FDE Agent 系统、飞书集成与人工审批的协作关系</p>
+</div>
+</section>
+
+<!-- 3. ERP 核心模块 -->
+<section id="section-3">
+<h2>三、ERP 核心模块</h2>
+
+<div class="table-wrap">
+<table>
+<thead>
+  <tr><th>模块</th><th>核心功能</th><th>飞书联动</th><th>数据对象</th></tr>
+</thead>
+<tbody>
+  <tr>
+    <td><strong>采购管理</strong></td>
+    <td>采购申请 → 审批 → 订单 → 收货</td>
+    <td>飞书审批流、审批通知</td>
+    <td>PurchaseOrder, PurchaseItem</td>
+  </tr>
+  <tr>
+    <td><strong>供应商管理</strong></td>
+    <td>供应商注册、资质审核、评级</td>
+    <td>多维表格同步</td>
+    <td>Supplier, SupplierRating</td>
+  </tr>
+  <tr>
+    <td><strong>库存管理</strong></td>
+    <td>入库、出库、库存查询、预警</td>
+    <td>预警推送到飞书群</td>
+    <td>Inventory, StockMovement</td>
+  </tr>
+  <tr>
+    <td><strong>基础数据</strong></td>
+    <td>物料、员工、部门</td>
+    <td>飞书通讯录同步</td>
+    <td>Material, Employee, Department</td>
+  </tr>
+</tbody>
+</table>
+</div>
+
+<h3>3.1 核心 API 设计</h3>
+<pre><code># 采购管理
+POST   /api/v1/purchase-requests          # 创建采购申请
+GET    /api/v1/purchase-requests/{id}     # 查询采购申请
+PUT    /api/v1/purchase-requests/{id}     # 更新采购申请
+POST   /api/v1/purchase-requests/{id}/submit  # 提交审批
+
+# 审批
+POST   /api/v1/approvals/{id}/approve     # 审批通过
+POST   /api/v1/approvals/{id}/reject      # 审批驳回
+POST   /api/v1/approvals/{id}/withdraw    # 撤回
+
+# 供应商
+GET    /api/v1/suppliers                   # 供应商列表
+GET    /api/v1/suppliers/{id}/risk-report  # 供应商风险报告（Agent 生成）
+
+# Webhook（飞书回调）
+POST   /api/v1/webhooks/feishu-approval   # 飞书审批状态回调</code></pre>
+</section>
+
+<!-- 4. FDE Agent 系统 -->
+<section id="section-4">
+<h2>四、FDE Agent 系统</h2>
+
+<h3>4.1 Agent 能力矩阵</h3>
+<div class="table-wrap">
+<table>
+<thead>
+  <tr><th>Agent</th><th>功能</th><th>输入</th><th>输出</th><th>工具调用</th></tr>
+</thead>
+<tbody>
+  <tr>
+    <td><strong>风险分析 Agent</strong></td>
+    <td>评估采购单风险等级</td>
+    <td>采购金额、品类、供应商历史</td>
+    <td>风险评分（0-100）+ 风险点说明</td>
+    <td>ERP API、历史数据查询</td>
+  </tr>
+  <tr>
+    <td><strong>供应商尽调 Agent</strong></td>
+    <td>生成供应商背景报告</td>
+    <td>供应商名称/编码</td>
+    <td>工商信息、舆情、风险提示</td>
+    <td>联网搜索、企业信用 API</td>
+  </tr>
+  <tr>
+    <td><strong>审批建议 Agent</strong></td>
+    <td>辅助审批人决策</td>
+    <td>采购单 + 风险分析 + 尽调报告</td>
+    <td>建议：通过/驳回/补充材料/转人工</td>
+    <td>规则引擎、历史审批数据</td>
+  </tr>
+  <tr>
+    <td><strong>异常检测 Agent</strong></td>
+    <td>监控异常采购行为</td>
+    <td>历史采购数据</td>
+    <td>异常模式告警</td>
+    <td>统计分析、模式识别</td>
+  </tr>
+</tbody>
+</table>
+</div>
+
+<h3>4.2 LangGraph 工作流</h3>
+<pre><code>from langgraph.graph import StateGraph, END
+
+# 定义状态
+class ProcurementState(TypedDict):
+    purchase_request: dict
+    risk_score: float
+    risk_analysis: str
+    supplier_report: dict
+    approval_decision: str
+    needs_human_review: bool
+
+# 构建工作流
+workflow = StateGraph(ProcurementState)
+
+# 添加节点
+workflow.add_node("analyze_risk", risk_analysis_agent)
+workflow.add_node("research_supplier", supplier_research_agent)
+workflow.add_node("decide_approval", approval_advisor_agent)
+workflow.add_node("route_to_human", human_review_router)  # 高风险路由
+workflow.add_node("auto_approve", auto_approval_action)
+
+# 条件路由：高风险 → 人工审批；低风险 → 自动通过
+workflow.add_conditional_edges(
+    "decide_approval",
+    route_by_risk_level,  # risk_score >= 70 → human, else → auto
+    {
+        "human_review": "route_to_human",
+        "auto_approve": "auto_approve"
+    }
+)
+
+# 定义边
+workflow.set_entry_point("analyze_risk")
+workflow.add_edge("analyze_risk", "research_supplier")
+workflow.add_edge("research_supplier", "decide_approval")
+workflow.add_edge("route_to_human", END)   # 推送飞书审批流
+workflow.add_edge("auto_approve", END)</code></pre>
+
+<div class="callout info">
+  <strong>人机协作节点</strong>
+  <code>route_to_human</code> 是 LangGraph 中的人机协作节点。当 Agent 判定风险等级 ≥ 70 分时，流程暂停并推送至飞书审批流，等待人工审批。审批结果通过飞书 Webhook 回调后，流程恢复并更新状态。
+</div>
+</section>
+
+<!-- 5. 高风险人工审批功能 -->
+<section id="section-5">
+<h2>五、高风险人工审批功能</h2>
+
+<h3>5.1 触发条件</h3>
+<div class="table-wrap">
+<table>
+<thead>
+  <tr><th>维度</th><th>触发条件</th><th>风险权重</th><th>说明</th></tr>
+</thead>
+<tbody>
+  <tr><td>金额</td><td>单笔采购金额 ≥ 50,000 元</td><td>+30</td><td>大额采购需人工复核</td></tr>
+  <tr><td>新供应商</td><td>首次合作的供应商</td><td>+25</td><td>无历史交易记录</td></tr>
+  <tr><td>品类异常</td><td>采购品类与部门历史不符</td><td>+20</td><td>偏离正常采购模式</td></tr>
+  <tr><td>供应商风险</td><td>尽调发现工商异常/舆情风险</td><td>+25</td><td>信用风险信号</td></tr>
+  <tr><td>频率异常</td><td>同一供应商短期多次采购</td><td>+15</td><td>可能拆分规避审批</td></tr>
+  <tr><td>超预算</td><td>采购金额超出部门预算</td><td>+20</td><td>预算控制失效</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="callout warning">
+  <strong>风险评分规则</strong>
+  综合风险评分 = 各维度权重之和（满分 100）。<br>
+  <strong>≥ 70 分</strong>：强制人工审批（不可跳过）。<strong>40-69 分</strong>：建议人工审批，可由高级审批人选择跳过。<strong>&lt; 40 分</strong>：自动通过。
+</div>
+
+<h3>5.2 审批状态流转</h3>
+
+<div class="status-flow">
+  <span class="status-badge pending">待提交</span>
+  <span class="arrow">→</span>
+  <span class="status-badge active">Agent 分析中</span>
+  <span class="arrow">→</span>
+  <span class="status-badge pending">待审批</span>
+  <span class="arrow">→</span>
+  <span class="status-badge active">审批中</span>
+  <span class="arrow">→</span>
+  <span class="status-badge approved">已通过</span>
+</div>
+<div class="status-flow">
+  <span style="visibility:hidden" class="status-badge">待提交</span>
+  <span style="visibility:hidden" class="arrow">→</span>
+  <span style="visibility:hidden" class="status-badge">Agent 分析中</span>
+  <span style="visibility:hidden" class="arrow">→</span>
+  <span style="visibility:hidden" class="status-badge">待审批</span>
+  <span style="visibility:hidden" class="arrow">→</span>
+  <span class="status-badge active">审批中</span>
+  <span class="arrow">→</span>
+  <span class="status-badge rejected">已驳回</span>
+</div>
+<div class="status-flow">
+  <span style="visibility:hidden" class="status-badge">待提交</span>
+  <span style="visibility:hidden" class="arrow">→</span>
+  <span style="visibility:hidden" class="status-badge">Agent 分析中</span>
+  <span style="visibility:hidden" class="arrow">→</span>
+  <span class="status-badge pending">待审批</span>
+  <span class="arrow">→</span>
+  <span class="status-badge withdrawn">已撤回</span>
+</div>
+<div class="status-flow">
+  <span style="visibility:hidden" class="status-badge">待提交</span>
+  <span style="visibility:hidden" class="arrow">→</span>
+  <span style="visibility:hidden" class="status-badge">Agent 分析中</span>
+  <span style="visibility:hidden" class="arrow">→</span>
+  <span class="status-badge pending">待审批</span>
+  <span class="arrow">→</span>
+  <span class="status-badge timeout">超时自动升级</span>
+</div>
+
+<h4>状态转移规则</h4>
+<div class="table-wrap">
+<table>
+<thead>
+  <tr><th>源状态</th><th>触发动作</th><th>目标状态</th><th>前置条件</th></tr>
+</thead>
+<tbody>
+  <tr><td>待提交</td><td>提交审批</td><td>Agent 分析中</td><td>表单校验通过</td></tr>
+  <tr><td>Agent 分析中</td><td>分析完成，风险 ≥ 70</td><td>待审批</td><td>Agent 输出结果</td></tr>
+  <tr><td>Agent 分析中</td><td>分析完成，风险 &lt; 40</td><td>已通过</td><td>Agent 输出结果</td></tr>
+  <tr><td>待审批</td><td>审批人接受</td><td>审批中</td><td>审批人有权限</td></tr>
+  <tr><td>审批中</td><td>审批通过</td><td>已通过</td><td>审批意见已填写</td></tr>
+  <tr><td>审批中</td><td>审批驳回</td><td>已驳回</td><td>驳回理由已填写</td></tr>
+  <tr><td>待审批 / 审批中</td><td>申请人撤回</td><td>已撤回</td><td>仅申请人可操作</td></tr>
+  <tr><td>待审批</td><td>超过 48 小时未处理</td><td>超时自动升级</td><td>升级至上级审批人</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>5.3 角色权限</h3>
+<div class="table-wrap">
+<table>
+<thead>
+  <tr><th>角色</th><th>可执行操作</th><th>数据可见范围</th><th>审批额度</th></tr>
+</thead>
+<tbody>
+  <tr>
+    <td><strong>申请人</strong></td>
+    <td>创建/编辑/提交/撤回采购申请</td>
+    <td>仅自己的申请</td>
+    <td>—</td>
+  </tr>
+  <tr>
+    <td><strong>部门审批人</strong></td>
+    <td>查看/审批本部门采购单</td>
+    <td>本部门采购单</td>
+    <td>≤ 100,000 元</td>
+  </tr>
+  <tr>
+    <td><strong>高级审批人</strong></td>
+    <td>查看/审批所有采购单；可跳过 40-69 分建议审批</td>
+    <td>全部采购单</td>
+    <td>≤ 500,000 元</td>
+  </tr>
+  <tr>
+    <td><strong>系统管理员</strong></td>
+    <td>配置风险阈值、管理审批流、查看审计日志</td>
+    <td>全部数据</td>
+    <td>无限制</td>
+  </tr>
+</tbody>
+</table>
+</div>
+
+<h3>5.4 异常处理</h3>
+<div class="table-wrap">
+<table>
+<thead>
+  <tr><th>异常场景</th><th>处理策略</th><th>通知方式</th></tr>
+</thead>
+<tbody>
+  <tr>
+    <td><strong>审批超时</strong>（48 小时未处理）</td>
+    <td>自动升级至上级审批人；原审批人收到催促通知</td>
+    <td>飞书消息 + 群通知</td>
+  </tr>
+  <tr>
+    <td><strong>审批人不在</strong>（请假/离职）</td>
+    <td>管理员可转移审批任务至备用审批人</td>
+    <td>飞书消息通知双方</td>
+  </tr>
+  <tr>
+    <td><strong>申请人撤回</strong></td>
+    <td>待审批状态可直接撤回；审批中需审批人确认</td>
+    <td>飞书消息通知审批人</td>
+  </tr>
+  <tr>
+    <td><strong>Agent 分析失败</strong></td>
+    <td>标记为「待人工审核」，跳过 Agent 判断直接进入人工审批</td>
+    <td>飞书消息通知管理员</td>
+  </tr>
+  <tr>
+    <td><strong>飞书 Webhook 回调失败</strong></td>
+    <td>重试 3 次（指数退避）；失败后标记为「回调异常」，管理员手动同步</td>
+    <td>飞书消息通知管理员</td>
+  </tr>
+</tbody>
+</table>
+</div>
+
+<h3>5.5 通知机制</h3>
+<div class="table-wrap">
+<table>
+<thead>
+  <tr><th>事件</th><th>通知对象</th><th>通知渠道</th><th>消息内容</th></tr>
+</thead>
+<tbody>
+  <tr><td>采购单提交</td><td>审批人</td><td>飞书消息卡片</td><td>申请人、金额、品类、Agent 风险摘要</td></tr>
+  <tr><td>审批通过</td><td>申请人</td><td>飞书消息</td><td>审批结果、审批意见</td></tr>
+  <tr><td>审批驳回</td><td>申请人</td><td>飞书消息</td><td>驳回理由、修改建议</td></tr>
+  <tr><td>即将超时</td><td>审批人</td><td>飞书消息</td><td>剩余时间提醒（超时前 4 小时）</td></tr>
+  <tr><td>超时升级</td><td>上级审批人 + 原审批人</td><td>飞书消息 + 群通知</td><td>升级原因、原审批人</td></tr>
+  <tr><td>库存预警</td><td>采购负责人</td><td>飞书群通知</td><td>物料名称、当前库存、建议补货量</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- 6. 飞书集成 -->
+<section id="section-6">
+<h2>六、飞书集成</h2>
+
+<h3>6.1 集成点</h3>
+<div class="grid-2">
+  <div class="grid-card">
+    <h4>审批流</h4>
+    <p>高风险采购单自动创建飞书审批实例，附带 Agent 风险分析报告。审批人可在飞书内直接通过/驳回，结果通过 Webhook 回调同步至 ERP。</p>
+  </div>
+  <div class="grid-card">
+    <h4>消息通知</h4>
+    <p>通过飞书机器人推送结构化消息卡片，包含采购摘要、风险等级、快捷操作按钮。支持群通知（库存预警）和私聊通知（审批提醒）。</p>
+  </div>
+  <div class="grid-card">
+    <h4>多维表格</h4>
+    <p>供应商信息、基础数据双向同步至飞书多维表格，方便业务人员在飞书内查看和编辑，数据变更自动同步回 ERP。</p>
+  </div>
+  <div class="grid-card">
+    <h4>通讯录</h4>
+    <p>同步飞书通讯录获取员工信息和组织架构，用于审批流的自动路由（按部门匹配审批人）。</p>
+  </div>
+</div>
+
+<h3>6.2 Webhook 回调设计</h3>
+<pre><code># 飞书审批回调处理
+@app.post("/api/v1/webhooks/feishu-approval")
+async def feishu_approval_callback(request: Request):
+    payload = await request.json()
+    
+    # 验证签名
+    if not verify_feishu_signature(payload):
+        raise HTTPException(status_code=403)
+    
+    event = payload.get("event")
+    approval_code = event.get("code")        # 飞书审批实例 ID
+    status = event.get("status")             # APPROVED / REJECTED
+    
+    # 查找对应采购单
+    purchase_request = await db.get_purchase_request_by_feishu_code(approval_code)
+    
+    if status == "APPROVED":
+        await purchase_request.approve(approver_comment=event.get("comment"))
+    elif status == "REJECTED":
+        await purchase_request.reject(reason=event.get("comment"))
+    
+    # 更新 LangGraph 状态
+    await agent_workflow.update_state(
+        request_id=purchase_request.id,
+        approval_status=status
+    )
+    
+    return {"code": 0}</code></pre>
+</section>
+
+<!-- 7. 技术选型 -->
+<section id="section-7">
+<h2>七、技术选型</h2>
+
+<div class="table-wrap">
+<table>
+<thead>
+  <tr><th>层次</th><th>技术</th><th>理由</th></tr>
+</thead>
+<tbody>
+  <tr><td>后端框架</td><td><strong>FastAPI</strong></td><td>异步高性能、自动 OpenAPI 文档、类型安全、与 Python AI 生态无缝衔接</td></tr>
+  <tr><td>ORM</td><td><strong>SQLAlchemy 2.0</strong></td><td>成熟稳定、支持异步、类型提示友好</td></tr>
+  <tr><td>Agent 框架</td><td><strong>LangGraph</strong></td><td>支持状态机编排、人机协作节点、条件路由；比 LangChain 更适合复杂工作流</td></tr>
+  <tr><td>LLM</td><td><strong>OpenAI API / Kimi API</strong></td><td>支持多模型切换、Function Calling、结构化输出</td></tr>
+  <tr><td>数据库</td><td><strong>PostgreSQL</strong></td><td>支持 JSON 字段、全文搜索、成熟可靠</td></tr>
+  <tr><td>缓存</td><td><strong>Redis</strong></td><td>Agent 状态缓存、审批超时检测、任务队列</td></tr>
+  <tr><td>任务队列</td><td><strong>Celery</strong></td><td>异步任务（Agent 分析、通知发送、超时检测）</td></tr>
+  <tr><td>飞书集成</td><td><strong>飞书开放平台 SDK</strong></td><td>官方 SDK、覆盖审批/消息/多维表格/通讯录</td></tr>
+  <tr><td>容器化</td><td><strong>Docker + docker-compose</strong></td><td>服务编排、一键部署、环境一致性</td></tr>
+  <tr><td>CI/CD</td><td><strong>GitHub Actions</strong></td><td>自动测试、镜像构建、部署</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- 8. Docker 容器化部署 -->
+<section id="section-8">
+<h2>八、Docker 容器化部署</h2>
+
+<h3>8.1 服务拆分</h3>
+<div class="table-wrap">
+<table>
+<thead>
+  <tr><th>服务</th><th>镜像</th><th>端口</th><th>说明</th></tr>
+</thead>
+<tbody>
+  <tr><td>erp-api</td><td>自建（FastAPI）</td><td>8000</td><td>ERP 后端 API 服务</td></tr>
+  <tr><td>agent-service</td><td>自建（LangGraph）</td><td>8001</td><td>FDE Agent 服务</td></tr>
+  <tr><td>celery-worker</td><td>自建（Celery）</td><td>—</td><td>异步任务 Worker</td></tr>
+  <tr><td>postgres</td><td>postgres:16</td><td>5432</td><td>数据库</td></tr>
+  <tr><td>redis</td><td>redis:7-alpine</td><td>6379</td><td>缓存 + 任务队列</td></tr>
+  <tr><td>nginx</td><td>nginx:alpine</td><td>80</td><td>反向代理 + 静态资源</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>8.2 docker-compose.yml</h3>
+<pre><code>version: "3.9"
+
+services:
+  erp-api:
+    build:
+      context: ./erp-backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://erp:erp_pass@postgres:5432/erp_db
+      - REDIS_URL=redis://redis:6379/0
+      - FEISHU_APP_ID=${FEISHU_APP_ID}
+      - FEISHU_APP_SECRET=${FEISHU_APP_SECRET}
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./erp-backend:/app
+    restart: unless-stopped
+
+  agent-service:
+    build:
+      context: ./fde-agents
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    environment:
+      - ERP_API_URL=http://erp-api:8000
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - REDIS_URL=redis://redis:6379/1
+    depends_on:
+      - erp-api
+      - redis
+    volumes:
+      - ./fde-agents:/app
+    restart: unless-stopped
+
+  celery-worker:
+    build:
+      context: ./erp-backend
+      dockerfile: Dockerfile
+    command: celery -A app.celery_app worker --loglevel=info
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://erp:erp_pass@postgres:5432/erp_db
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16
+    environment:
+      - POSTGRES_USER=erp
+      - POSTGRES_PASSWORD=erp_pass
+      - POSTGRES_DB=erp_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - erp-api
+      - agent-service
+
+volumes:
+  postgres_data:
+  redis_data:</code></pre>
+
+<h3>8.3 Dockerfile 示例（ERP 后端）</h3>
+<pre><code>FROM python:3.12-slim
+
+WORKDIR /app
+
+# 安装系统依赖
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential libpq-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+# 安装 Python 依赖
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# 复制应用代码
+COPY . .
+
+# 健康检查
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+    CMD python -c "import httpx; httpx.get('http://localhost:8000/health')"
+
+EXPOSE 8000
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]</code></pre>
+
+<h3>8.4 一键部署</h3>
+<pre><code># 克隆项目
+git clone https://github.com/your-username/fde-erp-smart-procurement.git
+cd fde-erp-smart-procurement
+
+# 配置环境变量
+cp .env.example .env
+# 编辑 .env 填入飞书凭证、OpenAI API Key 等
+
+# 构建并启动
+docker-compose up -d --build
+
+# 查看日志
+docker-compose logs -f erp-api agent-service
+
+# 停止
+docker-compose down</code></pre>
+</section>
+
+<!-- 9. GitHub 发布计划 -->
+<section id="section-9">
+<h2>九、GitHub 发布计划</h2>
+
+<h3>9.1 仓库结构</h3>
+<pre><code>fde-erp-smart-procurement/
+├── README.md                    # 项目说明（核心入口）
+├── ARCHITECTURE.md              # 架构设计文档
+├── docs/                        # 详细文档
+│   ├── api-reference.md         # API 接口文档
+│   ├── approval-workflow.md     # 审批流程说明
+│   ├── agent-design.md          # Agent 设计说明
+│   └── deployment.md            # 部署指南
+├── erp-backend/                 # ERP 后端
+│   ├── app/
+│   │   ├── api/                 # API 路由
+│   │   ├── models/              # 数据模型
+│   │   ├── services/            # 业务逻辑
+│   │   ├── integrations/        # 飞书集成
+│   │   └── main.py
+│   ├── tests/
+│   ├── Dockerfile
+│   └── requirements.txt
+├── fde-agents/                  # FDE Agent 系统
+│   ├── agents/                  # Agent 实现
+│   ├── graph/                   # LangGraph 工作流
+│   ├── tools/                   # 工具集
+│   ├── Dockerfile
+│   └── requirements.txt
+├── nginx/                       # Nginx 配置
+│   └── nginx.conf
+├── scripts/                     # 脚本
+│   ├── init.sql                 # 数据库初始化
+│   └── seed_data.py             # 测试数据
+├── docker-compose.yml
+├── .env.example
+├── .github/
+│   └── workflows/
+│       ├── ci.yml               # 持续集成
+│       └── docker-build.yml     # 镜像构建
+└── LICENSE</code></pre>
+
+<h3>9.2 README 核心内容</h3>
+<div class="callout accent">
+  <strong>README 应包含的关键信息</strong>
+  <ul style="margin:0.5rem 0 0">
+    <li>项目标题与一句话说明</li>
+    <li>系统架构图（可复用文档中的 SVG）</li>
+    <li>核心功能列表（ERP 模块 + Agent 能力）</li>
+    <li>快速启动（3 步：克隆 → 配置 → 启动）</li>
+    <li>技术栈图标/列表</li>
+    <li>项目结构概览</li>
+    <li>开发指南链接</li>
+    <li>License</li>
+  </ul>
+</div>
+
+<h3>9.3 CI/CD 配置</h3>
+<pre><code># .github/workflows/ci.yml
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [erp-backend, fde-agents]
+    
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      
+      - name: Install dependencies
+        working-directory: ./${{ matrix.service }}
+        run: pip install -r requirements.txt
+      
+      - name: Run tests
+        working-directory: ./${{ matrix.service }}
+        run: pytest --cov --cov-report=xml
+        env:
+          DATABASE_URL: postgresql+asyncpg://test:test@localhost:5432/test_db
+          REDIS_URL: redis://localhost:6379/0</code></pre>
+
+<h3>9.4 发布里程碑</h3>
+<div class="table-wrap">
+<table>
+<thead>
+  <tr><th>版本</th><th>内容</th><th>标签</th></tr>
+</thead>
+<tbody>
+  <tr><td><strong>v0.1.0</strong></td><td>ERP 核心模块 + 飞书审批集成</td><td><code>alpha</code></td></tr>
+  <tr><td><strong>v0.2.0</strong></td><td>FDE Agent 系统（风险分析 + 供应商尽调）</td><td><code>alpha</code></td></tr>
+  <tr><td><strong>v0.3.0</strong></td><td>高风险人工审批完整流程</td><td><code>beta</code></td></tr>
+  <tr><td><strong>v1.0.0</strong></td><td>Docker 容器化 + 完整文档 + CI/CD</td><td><code>release</code></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- 10. 面试亮点设计 -->
+<section id="section-10">
+<h2>十、面试亮点设计</h2>
+
+<h3>10.1 体现 PDE 方法论</h3>
+<p>在文档和面试中明确展示你遵循 <strong>PDE 框架</strong>（月之暗面/Kimi 的核心方法论）：</p>
+<div class="grid-2">
+  <div class="grid-card">
+    <h4>P — Process 业务流程拆解</h4>
+    <p>拆解 ERP 采购流程，定义 Agent 嵌入点。不是先做 Demo 再适配业务，而是先理解完整业务链路，厘清 AI 与人的权责边界。</p>
+  </div>
+  <div class="grid-card">
+    <h4>D — Data 企业私有数据工程</h4>
+    <p>对接 ERP 历史采购数据，构建供应商风险知识库。使用真实数据（模拟）而非筛选后的优质样本，从源头抑制模型幻觉。</p>
+  </div>
+  <div class="grid-card">
+    <h4>E — Engine 智能 Agent 引擎编排</h4>
+    <p>用 LangGraph 编排多 Agent 协作，实现提示词版本管理、工具调用、安全护栏、全链路可观测。</p>
+  </div>
+  <div class="grid-card">
+    <h4>人机边界设计</h4>
+    <p>高风险强制人工审批（Agent 辅助但不替代），低风险自动通过。体现对 AI 落地中「权责边界」的深度理解。</p>
+  </div>
+</div>
+
+<h3>10.2 展示落地能力</h3>
+<ul>
+  <li><strong>完整部署文档</strong>：docker-compose 一键部署，面试官可在 10 分钟内跑起来</li>
+  <li><strong>真实数据 Demo</strong>：提供模拟数据集，含正常采购和异常采购案例</li>
+  <li><strong>评测指标</strong>：Agent 风险识别准确率、响应时间、误报率</li>
+  <li><strong>端到端演示</strong>：从提交采购申请 → Agent 分析 → 飞书审批 → 结果回写</li>
+</ul>
+
+<h3>10.3 体现业务理解</h3>
+<p>面试时不只是讲技术，要能解释「为什么这样设计」：</p>
+<ul>
+  <li><strong>为什么高风险要人工审批？</strong> — 金融/采购场景对准确度要求极高，AI 辅助但不替代人的决策权责</li>
+  <li><strong>为什么用 LangGraph 而不是 Dify？</strong> — 需要展示复杂 Agent 编排能力（状态机、条件路由、人机协作节点），LangGraph 更适合</li>
+  <li><strong>为什么和飞书联动？</strong> — 模拟真实 FDE 场景：对接客户现有办公系统，而非让客户切换到新平台</li>
+  <li><strong>审批超时升级逻辑？</strong> — 来自真实企业审批场景的需求，避免审批单积压</li>
+</ul>
+
+<h3>10.4 面试讲解建议</h3>
+<ol>
+  <li><strong>先讲故事</strong>：「这个项目模拟了 FDE 在客户现场的真实工作——把 AI 嵌入 ERP 采购流程」</li>
+  <li><strong>展示闭环</strong>：端到端演示完整流程（提交 → Agent 分析 → 人工审批 → 结果回写）</li>
+  <li><strong>强调取舍</strong>：为什么选 LangGraph、为什么风险阈值是 70、为什么超时是 48 小时</li>
+  <li><strong>展示工程能力</strong>：Docker 一键部署、CI/CD、测试覆盖</li>
+</ol>
+</section>
+
+</main>
+
+<footer class="page-footer">
+  <p>FDE + ERP 智能采购风控系统 · 项目方案 v2.0 · 2026-10-01</p>
+</footer>
+
+</div>
+
+<script>
+(function() {
+  try {
+    // 页内锚点导航拦截
+    document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+      anchor.addEventListener('click', function(e) {
+        var targetId = this.getAttribute('href').slice(1);
+        var target = document.getElementById(targetId);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  } catch(e) { /* 脚本失败时静态内容仍完整可读 */ }
+})();
+</script>
+</body>
+</html>

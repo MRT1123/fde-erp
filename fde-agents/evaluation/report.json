@@ -1,0 +1,447 @@
+{
+  "mode": "api",
+  "dataset": "D:\\erp\\fde-agents\\evaluation\\dataset.json",
+  "total": 25,
+  "risk_level_accuracy": 100.0,
+  "risk_score_accuracy": 100.0,
+  "decision_consistency": 96.0,
+  "overall_accuracy": 96.0,
+  "false_kill_rate": 0.0,
+  "level_distribution": {
+    "low": 6,
+    "medium": 11,
+    "high": 8
+  },
+  "prediction_distribution": {
+    "low": 6,
+    "medium": 11,
+    "high": 8
+  },
+  "details": [
+    {
+      "id": 1,
+      "name": "小额常规采购（无风险维度）",
+      "expected_level": "low",
+      "pred_level": "low",
+      "expected_score": [
+        0,
+        0
+      ],
+      "pred_score": 0.0,
+      "expected_decision": "approve",
+      "pred_decision": "approve",
+      "level_hit": true,
+      "score_hit": true,
+      "decision_hit": true,
+      "all_hit": true
+    },
+    {
+      "id": 2,
+      "name": "万元级常规采购",
+      "expected_level": "low",
+      "pred_level": "low",
+      "expected_score": [
+        0,
+        0
+      ],
+      "pred_score": 0.0,
+      "expected_decision": "approve",
+      "pred_decision": "approve",
+      "level_hit": true,
+      "score_hit": true,
+      "decision_hit": true,
+      "all_hit": true
+    },
+    {
+      "id": 3,
+      "name": "3万元常规采购",
+      "expected_level": "low",
+      "pred_level": "low",
+      "expected_score": [
+        0,
+        0
+      ],
+      "pred_score": 0.0,
+      "expected_decision": "approve",
+      "pred_decision": "approve",
+      "level_hit": true,
+      "score_hit": true,
+      "decision_hit": true,
+      "all_hit": true
+    },
+    {
+      "id": 4,
+      "name": "5万元边界（触发金额维度+30分，仍为低风险）",
+      "expected_level": "low",
+      "pred_level": "low",
+      "expected_score": [
+        30,
+        30
+      ],
+      "pred_score": 30.0,
+      "expected_decision": "approve",
+      "pred_decision": "approve",
+      "level_hit": true,
+      "score_hit": true,
+      "decision_hit": true,
+      "all_hit": true
+    },
+    {
+      "id": 5,
+      "name": "20万元（进入45分段-中风险）",
+      "expected_level": "medium",
+      "pred_level": "medium",
+      "expected_score": [
+        45,
+        45
+      ],
+      "pred_score": 45.0,
+      "expected_decision": "human",
+      "pred_decision": "human",
+      "level_hit": true,
+      "score_hit": true,
+      "decision_hit": true,
+      "all_hit": true
+    },
+    {
+      "id": 6,
+      "name": "50万元（60分-中风险上限）",
+      "expected_level": "medium",
+      "pred_level": "medium",
+      "expected_score": [
+        60,
+        60
+      ],
+      "pred_score": 60.0,
+      "expected_decision": "human",
+      "pred_decision": "human",
+      "level_hit": true,
+      "score_hit": true,
+      "decision_hit": true,
+      "all_hit": true
+    },
+    {
+      "id": 7,
+      "name": "百万元大额采购（60分-中风险）",
+      "expected_level": "medium",
+      "pred_level": "medium",
+      "expected_score": [
+        60,
+        60
+      ],
+      "pred_score": 60.0,
+      "expected_decision": "human",
+      "pred_decision": "human",
+      "level_hit": true,
+      "score_hit": true,
+      "decision_hit": true,
+      "all_hit": true
+    },
+    {
+      "id": 8,
+      "name": "5万+新供应商（首次合作）",
+      "expected_level": "medium",
+      "pred_level": "medium",
+      "expected_score": [
+        55,
+        55
+      ],
+      "pred_score": 55.0,
+      "expected_decision": "human",
+      "pred_decision": "human",
+      "level_hit": true,
+      "score_hit": true,
+      "decision_hit": true,
+      "all_hit": true
+    },
+    {
+      "id": 9,
+      "name": "5万+供应商尽调风险",
+      "expected_level": "medium",
+      "pred_level": "medium",
+      "expected_score": [
+        55,
+        55
+      ],
+      "pred_score": 55.0,
+      "expected_decision": "human",
+      "pred_decision": "human",
+      "level_hit": true,
+      "score_hit": true,
+      "decision_hit": true,
+      "all_hit": true
+    },
+    {
+      "id": 10,
+      "name": "5万+品类与部门历史不符",
+      "expected_level": "medium",
+      "pred_level": "medium",
+      "expected_score": [
+        50,
+        50
+      ],
+      "pred_score": 50.0,
+      "expected_decision": "human",
+      "pred_decision": "human",
+      "level_hit": true,
+      "score_hit": true,
+      "decision_hit": true,
+      "all_hit": true
+    },
+    {
+      "id": 11,
+      "name": "5万+同一供应商短期多次采购",
+      "expected_level": "medium",
+      "pred_level": "medium",
+      "expected_score": [
+        45,
+        45
+      ],
+      "pred_score": 45.0,
+      "expected_decision": "human",
+      "pred_decision": "human",
+      "level_hit": true,
+      "score_hit": true,
+      "decision_hit": true,
+      "all_hit": true
+    },
+    {
+      "id": 12,
+      "name": "5万+超预算",
+      "expected_level": "medium",
+      "pred_level": "medium",
+      "expected_score": [
+        50,
+        50
+      ],
+      "pred_score": 50.0,
+      "expected_decision": "human",
+      "pred_decision": "human",
+      "level_hit": true,
+      "score_hit": true,
+      "decision_hit": true,
+      "all_hit": true
+    },
+    {
+      "id": 13,
+      "name": "5万+新供应商+超预算（恰好高风险边界）",
+      "expected_level": "high",
+      "pred_level": "high",
+      "expected_score": [
+        75,
+        75
+      ],
+      "pred_score": 75.0,
+      "expected_decision": "human",
+      "pred_decision": "human",
+      "level_hit": true,
+      "score_hit": true,
+      "decision_hit": true,
+      "all_hit": true
+    },
+    {
+      "id": 14,
+      "name": "20万+新供应商（恰好70-高风险边界）",
+      "expected_level": "high",
+      "pred_level": "high",
+      "expected_score": [
+        70,
+        70
+      ],
+      "pred_score": 70.0,
+      "expected_decision": "human",
+      "pred_decision": "human",
+      "level_hit": true,
+      "score_hit": true,
+      "decision_hit": true,
+      "all_hit": true
+    },
+    {
+      "id": 15,
+      "name": "5万+新供应商+供应商风险",
+      "expected_level": "high",
+      "pred_level": "high",
+      "expected_score": [
+        80,
+        80
+      ],
+      "pred_score": 80.0,
+      "expected_decision": "human",
+      "pred_decision": "human",
+      "level_hit": true,
+      "score_hit": true,
+      "decision_hit": true,
+      "all_hit": true
+    },
+    {
+      "id": 16,
+      "name": "5万+新供应商+品类不符+供应商风险（满分维度）",
+      "expected_level": "high",
+      "pred_level": "high",
+      "expected_score": [
+        100,
+        100
+      ],
+      "pred_score": 100.0,
+      "expected_decision": "human",
+      "pred_decision": "human",
+      "level_hit": true,
+      "score_hit": true,
+      "decision_hit": true,
+      "all_hit": true
+    },
+    {
+      "id": 17,
+      "name": "3万+新供应商+供应商风险+频次（中高风险）",
+      "expected_level": "medium",
+      "pred_level": "medium",
+      "expected_score": [
+        65,
+        65
+      ],
+      "pred_score": 65.0,
+      "expected_decision": "human",
+      "pred_decision": "human",
+      "level_hit": true,
+      "score_hit": true,
+      "decision_hit": true,
+      "all_hit": true
+    },
+    {
+      "id": 18,
+      "name": "3万+全部风险维度（超高危）",
+      "expected_level": "high",
+      "pred_level": "high",
+      "expected_score": [
+        105,
+        105
+      ],
+      "pred_score": 105.0,
+      "expected_decision": "human",
+      "pred_decision": "human",
+      "level_hit": true,
+      "score_hit": true,
+      "decision_hit": true,
+      "all_hit": true
+    },
+    {
+      "id": 19,
+      "name": "4.9万（金额阈值下方）",
+      "expected_level": "low",
+      "pred_level": "low",
+      "expected_score": [
+        0,
+        0
+      ],
+      "pred_score": 0.0,
+      "expected_decision": "approve",
+      "pred_decision": "approve",
+      "level_hit": true,
+      "score_hit": true,
+      "decision_hit": true,
+      "all_hit": true
+    },
+    {
+      "id": 20,
+      "name": "4.9万+新供应商（低风险自动通过）",
+      "expected_level": "low",
+      "pred_level": "low",
+      "expected_score": [
+        25,
+        25
+      ],
+      "pred_score": 25.0,
+      "expected_decision": "approve",
+      "pred_decision": "human",
+      "level_hit": true,
+      "score_hit": true,
+      "decision_hit": false,
+      "all_hit": false
+    },
+    {
+      "id": 21,
+      "name": "4.9万+新供应商+频次（恰好40-中风险边界）",
+      "expected_level": "medium",
+      "pred_level": "medium",
+      "expected_score": [
+        40,
+        40
+      ],
+      "pred_score": 40.0,
+      "expected_decision": "human",
+      "pred_decision": "human",
+      "level_hit": true,
+      "score_hit": true,
+      "decision_hit": true,
+      "all_hit": true
+    },
+    {
+      "id": 22,
+      "name": "19.9万+新供应商+供应商风险（高风险）",
+      "expected_level": "high",
+      "pred_level": "high",
+      "expected_score": [
+        80,
+        80
+      ],
+      "pred_score": 80.0,
+      "expected_decision": "human",
+      "pred_decision": "human",
+      "level_hit": true,
+      "score_hit": true,
+      "decision_hit": true,
+      "all_hit": true
+    },
+    {
+      "id": 23,
+      "name": "49万+新供应商+供应商风险（高风险）",
+      "expected_level": "high",
+      "pred_level": "high",
+      "expected_score": [
+        95,
+        95
+      ],
+      "pred_score": 95.0,
+      "expected_decision": "human",
+      "pred_decision": "human",
+      "level_hit": true,
+      "score_hit": true,
+      "decision_hit": true,
+      "all_hit": true
+    },
+    {
+      "id": 24,
+      "name": "8千+新供应商+品类不符+频次（中风险）",
+      "expected_level": "medium",
+      "pred_level": "medium",
+      "expected_score": [
+        60,
+        60
+      ],
+      "pred_score": 60.0,
+      "expected_decision": "human",
+      "pred_decision": "human",
+      "level_hit": true,
+      "score_hit": true,
+      "decision_hit": true,
+      "all_hit": true
+    },
+    {
+      "id": 25,
+      "name": "50万+新供应商（金额+新供应商组合到高风险）",
+      "expected_level": "high",
+      "pred_level": "high",
+      "expected_score": [
+        85,
+        85
+      ],
+      "pred_score": 85.0,
+      "expected_decision": "human",
+      "pred_decision": "human",
+      "level_hit": true,
+      "score_hit": true,
+      "decision_hit": true,
+      "all_hit": true
+    }
+  ]
+}

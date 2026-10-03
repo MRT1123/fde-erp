@@ -1,0 +1,129 @@
+# FDE + ERP 智能采购风控系统 · docker-compose
+# 对应 FDE_ERP_项目方案.html 8.2
+services:
+  postgres:
+    image: postgres:16
+    container_name: erp-postgres
+    environment:
+      POSTGRES_USER: erp
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-erp_pass}
+      POSTGRES_DB: erp_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U erp -d erp_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: erp-redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+  erp-api:
+    build:
+      context: ./erp-backend
+      dockerfile: Dockerfile
+    container_name: erp-api
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://erp:${POSTGRES_PASSWORD:-erp_pass}@postgres:5432/erp_db
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/1
+      - AGENT_SERVICE_URL=http://agent-service:8001
+      - FEISHU_APP_ID=${FEISHU_APP_ID:-}
+      - FEISHU_APP_SECRET=${FEISHU_APP_SECRET:-}
+      - SECRET_KEY=${SECRET_KEY:-change-me-in-production}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    restart: unless-stopped
+
+  agent-service:
+    build:
+      context: ./fde-agents
+      dockerfile: Dockerfile
+    container_name: agent-service
+    ports:
+      - "8001:8001"
+    environment:
+      - ERP_API_URL=http://erp-api:8000
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - OPENAI_BASE_URL=${OPENAI_BASE_URL:-}
+      - LLM_MODEL=${LLM_MODEL:-gpt-4o-mini}
+      - REDIS_URL=redis://redis:6379/1
+    depends_on:
+      - erp-api
+      - redis
+    restart: unless-stopped
+
+  celery-worker:
+    build:
+      context: ./erp-backend
+      dockerfile: Dockerfile
+    container_name: erp-celery-worker
+    command: celery -A app.celery_app worker --loglevel=info
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://erp:${POSTGRES_PASSWORD:-erp_pass}@postgres:5432/erp_db
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/1
+      - AGENT_SERVICE_URL=http://agent-service:8001
+      - FEISHU_APP_ID=${FEISHU_APP_ID:-}
+      - FEISHU_APP_SECRET=${FEISHU_APP_SECRET:-}
+    depends_on:
+      - erp-api
+      - redis
+    restart: unless-stopped
+
+  celery-beat:
+    build:
+      context: ./erp-backend
+      dockerfile: Dockerfile
+    container_name: erp-celery-beat
+    command: celery -A app.celery_app beat --loglevel=info
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://erp:${POSTGRES_PASSWORD:-erp_pass}@postgres:5432/erp_db
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/1
+    depends_on:
+      - erp-api
+      - redis
+    restart: unless-stopped
+
+  erp-web:
+    build:
+      context: ./erp-web
+      dockerfile: Dockerfile
+    container_name: erp-web
+    ports:
+      - "8080:80"
+    depends_on:
+      - erp-api
+      - agent-service
+    restart: unless-stopped
+
+  fde-web:
+    build:
+      context: ./fde-web
+      dockerfile: Dockerfile
+    container_name: fde-web
+    ports:
+      - "8081:80"
+    depends_on:
+      - agent-service
+    restart: unless-stopped
+
+volumes:
+  pgdata:

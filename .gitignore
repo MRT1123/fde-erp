@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# 环境变量（密钥与配置，保留模板）
+.env
+.env.*
+!.env.example
+
+# IDE / 系统
+.idea/
+.vscode/
+.DS_Store
+
+# 测试缓存
+.pytest_cache/
+.coverage
+htmlcov/
+
+# 数据库 / 数据文件（开发库含测试数据，禁止入库）
+*.sqlite3
+*.db
+*.db-journal
+
+# 前端依赖与构建产物
+node_modules/
+dist/
+*.local
+
+# Docker
+pgdata/
+
+# 运行时目录（备份、日志、临时脚本、诊断输出）
+.runtime/
+
+# 日志
+*.log
+
+# 工作区杂项
+_fde_out.txt
+_fde_err.txt

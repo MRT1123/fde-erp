@@ -1,0 +1,569 @@
+{
+  "_meta": {
+    "description": "FDE 智能风控 Agent 效果评测集：采购单输入 → 预期风险等级/评分区间/审批建议",
+    "version": "1.0",
+    "expected_source": "规则引擎（risk_rules.compute_rule_score）与审批建议（approval_advisor 规则兜底）",
+    "rules": {
+      "amount": ">=500000:+60, >=200000:+45, >=50000:+30, else:0",
+      "new_supplier": 25,
+      "category_mismatch": 20,
+      "supplier_risk": 25,
+      "frequency_risk": 15,
+      "over_budget": 20,
+      "level": ">=70:high, >=40:medium, else:low",
+      "decision": "low->approve, medium/high->human"
+    }
+  },
+  "cases": [
+    {
+      "id": 1,
+      "name": "小额常规采购（无风险维度）",
+      "purchase_request": {
+        "total_amount": 1000,
+        "first_cooperation": false,
+        "supplier_risk": false,
+        "category_mismatch": false,
+        "frequency_risk": false,
+        "over_budget": false,
+        "supplier_name": "深圳市华科电子有限公司",
+        "supplier_id": 101
+      },
+      "expected": {
+        "risk_level": "low",
+        "risk_score_range": [
+          0,
+          0
+        ],
+        "approval_decision": "approve"
+      }
+    },
+    {
+      "id": 2,
+      "name": "万元级常规采购",
+      "purchase_request": {
+        "total_amount": 8000,
+        "first_cooperation": false,
+        "supplier_risk": false,
+        "category_mismatch": false,
+        "frequency_risk": false,
+        "over_budget": false,
+        "supplier_name": "深圳市华科电子有限公司",
+        "supplier_id": 101
+      },
+      "expected": {
+        "risk_level": "low",
+        "risk_score_range": [
+          0,
+          0
+        ],
+        "approval_decision": "approve"
+      }
+    },
+    {
+      "id": 3,
+      "name": "3万元常规采购",
+      "purchase_request": {
+        "total_amount": 30000,
+        "first_cooperation": false,
+        "supplier_risk": false,
+        "category_mismatch": false,
+        "frequency_risk": false,
+        "over_budget": false,
+        "supplier_name": "深圳市华科电子有限公司",
+        "supplier_id": 101
+      },
+      "expected": {
+        "risk_level": "low",
+        "risk_score_range": [
+          0,
+          0
+        ],
+        "approval_decision": "approve"
+      }
+    },
+    {
+      "id": 4,
+      "name": "5万元边界（触发金额维度+30分，仍为低风险）",
+      "purchase_request": {
+        "total_amount": 50000,
+        "first_cooperation": false,
+        "supplier_risk": false,
+        "category_mismatch": false,
+        "frequency_risk": false,
+        "over_budget": false,
+        "supplier_name": "深圳市华科电子有限公司",
+        "supplier_id": 101
+      },
+      "expected": {
+        "risk_level": "low",
+        "risk_score_range": [
+          30,
+          30
+        ],
+        "approval_decision": "approve"
+      }
+    },
+    {
+      "id": 5,
+      "name": "20万元（进入45分段-中风险）",
+      "purchase_request": {
+        "total_amount": 200000,
+        "first_cooperation": false,
+        "supplier_risk": false,
+        "category_mismatch": false,
+        "frequency_risk": false,
+        "over_budget": false,
+        "supplier_name": "深圳市华科电子有限公司",
+        "supplier_id": 101
+      },
+      "expected": {
+        "risk_level": "medium",
+        "risk_score_range": [
+          45,
+          45
+        ],
+        "approval_decision": "human"
+      }
+    },
+    {
+      "id": 6,
+      "name": "50万元（60分-中风险上限）",
+      "purchase_request": {
+        "total_amount": 500000,
+        "first_cooperation": false,
+        "supplier_risk": false,
+        "category_mismatch": false,
+        "frequency_risk": false,
+        "over_budget": false,
+        "supplier_name": "深圳市华科电子有限公司",
+        "supplier_id": 101
+      },
+      "expected": {
+        "risk_level": "medium",
+        "risk_score_range": [
+          60,
+          60
+        ],
+        "approval_decision": "human"
+      }
+    },
+    {
+      "id": 7,
+      "name": "百万元大额采购（60分-中风险）",
+      "purchase_request": {
+        "total_amount": 1000000,
+        "first_cooperation": false,
+        "supplier_risk": false,
+        "category_mismatch": false,
+        "frequency_risk": false,
+        "over_budget": false,
+        "supplier_name": "深圳市华科电子有限公司",
+        "supplier_id": 101
+      },
+      "expected": {
+        "risk_level": "medium",
+        "risk_score_range": [
+          60,
+          60
+        ],
+        "approval_decision": "human"
+      }
+    },
+    {
+      "id": 8,
+      "name": "5万+新供应商（首次合作）",
+      "purchase_request": {
+        "total_amount": 50000,
+        "first_cooperation": true,
+        "supplier_risk": false,
+        "category_mismatch": false,
+        "frequency_risk": false,
+        "over_budget": false,
+        "supplier_name": "深圳市华科电子有限公司",
+        "supplier_id": 101
+      },
+      "expected": {
+        "risk_level": "medium",
+        "risk_score_range": [
+          55,
+          55
+        ],
+        "approval_decision": "human"
+      }
+    },
+    {
+      "id": 9,
+      "name": "5万+供应商尽调风险",
+      "purchase_request": {
+        "total_amount": 50000,
+        "first_cooperation": false,
+        "supplier_risk": true,
+        "category_mismatch": false,
+        "frequency_risk": false,
+        "over_budget": false,
+        "supplier_name": "深圳市华科电子有限公司",
+        "supplier_id": 101
+      },
+      "expected": {
+        "risk_level": "medium",
+        "risk_score_range": [
+          55,
+          55
+        ],
+        "approval_decision": "human"
+      }
+    },
+    {
+      "id": 10,
+      "name": "5万+品类与部门历史不符",
+      "purchase_request": {
+        "total_amount": 50000,
+        "first_cooperation": false,
+        "supplier_risk": false,
+        "category_mismatch": true,
+        "frequency_risk": false,
+        "over_budget": false,
+        "supplier_name": "深圳市华科电子有限公司",
+        "supplier_id": 101
+      },
+      "expected": {
+        "risk_level": "medium",
+        "risk_score_range": [
+          50,
+          50
+        ],
+        "approval_decision": "human"
+      }
+    },
+    {
+      "id": 11,
+      "name": "5万+同一供应商短期多次采购",
+      "purchase_request": {
+        "total_amount": 50000,
+        "first_cooperation": false,
+        "supplier_risk": false,
+        "category_mismatch": false,
+        "frequency_risk": true,
+        "over_budget": false,
+        "supplier_name": "深圳市华科电子有限公司",
+        "supplier_id": 101
+      },
+      "expected": {
+        "risk_level": "medium",
+        "risk_score_range": [
+          45,
+          45
+        ],
+        "approval_decision": "human"
+      }
+    },
+    {
+      "id": 12,
+      "name": "5万+超预算",
+      "purchase_request": {
+        "total_amount": 50000,
+        "first_cooperation": false,
+        "supplier_risk": false,
+        "category_mismatch": false,
+        "frequency_risk": false,
+        "over_budget": true,
+        "supplier_name": "深圳市华科电子有限公司",
+        "supplier_id": 101
+      },
+      "expected": {
+        "risk_level": "medium",
+        "risk_score_range": [
+          50,
+          50
+        ],
+        "approval_decision": "human"
+      }
+    },
+    {
+      "id": 13,
+      "name": "5万+新供应商+超预算（恰好高风险边界）",
+      "purchase_request": {
+        "total_amount": 50000,
+        "first_cooperation": true,
+        "supplier_risk": false,
+        "category_mismatch": false,
+        "frequency_risk": false,
+        "over_budget": true,
+        "supplier_name": "深圳市华科电子有限公司",
+        "supplier_id": 101
+      },
+      "expected": {
+        "risk_level": "high",
+        "risk_score_range": [
+          75,
+          75
+        ],
+        "approval_decision": "human"
+      }
+    },
+    {
+      "id": 14,
+      "name": "20万+新供应商（恰好70-高风险边界）",
+      "purchase_request": {
+        "total_amount": 200000,
+        "first_cooperation": true,
+        "supplier_risk": false,
+        "category_mismatch": false,
+        "frequency_risk": false,
+        "over_budget": false,
+        "supplier_name": "深圳市华科电子有限公司",
+        "supplier_id": 101
+      },
+      "expected": {
+        "risk_level": "high",
+        "risk_score_range": [
+          70,
+          70
+        ],
+        "approval_decision": "human"
+      }
+    },
+    {
+      "id": 15,
+      "name": "5万+新供应商+供应商风险",
+      "purchase_request": {
+        "total_amount": 50000,
+        "first_cooperation": true,
+        "supplier_risk": true,
+        "category_mismatch": false,
+        "frequency_risk": false,
+        "over_budget": false,
+        "supplier_name": "深圳市华科电子有限公司",
+        "supplier_id": 101
+      },
+      "expected": {
+        "risk_level": "high",
+        "risk_score_range": [
+          80,
+          80
+        ],
+        "approval_decision": "human"
+      }
+    },
+    {
+      "id": 16,
+      "name": "5万+新供应商+品类不符+供应商风险（满分维度）",
+      "purchase_request": {
+        "total_amount": 50000,
+        "first_cooperation": true,
+        "supplier_risk": true,
+        "category_mismatch": true,
+        "frequency_risk": false,
+        "over_budget": false,
+        "supplier_name": "深圳市华科电子有限公司",
+        "supplier_id": 101
+      },
+      "expected": {
+        "risk_level": "high",
+        "risk_score_range": [
+          100,
+          100
+        ],
+        "approval_decision": "human"
+      }
+    },
+    {
+      "id": 17,
+      "name": "3万+新供应商+供应商风险+频次（中高风险）",
+      "purchase_request": {
+        "total_amount": 30000,
+        "first_cooperation": true,
+        "supplier_risk": true,
+        "category_mismatch": false,
+        "frequency_risk": true,
+        "over_budget": false,
+        "supplier_name": "深圳市华科电子有限公司",
+        "supplier_id": 101
+      },
+      "expected": {
+        "risk_level": "medium",
+        "risk_score_range": [
+          65,
+          65
+        ],
+        "approval_decision": "human"
+      }
+    },
+    {
+      "id": 18,
+      "name": "3万+全部风险维度（超高危）",
+      "purchase_request": {
+        "total_amount": 30000,
+        "first_cooperation": true,
+        "supplier_risk": true,
+        "category_mismatch": true,
+        "frequency_risk": true,
+        "over_budget": true,
+        "supplier_name": "深圳市华科电子有限公司",
+        "supplier_id": 101
+      },
+      "expected": {
+        "risk_level": "high",
+        "risk_score_range": [
+          105,
+          105
+        ],
+        "approval_decision": "human"
+      }
+    },
+    {
+      "id": 19,
+      "name": "4.9万（金额阈值下方）",
+      "purchase_request": {
+        "total_amount": 49000,
+        "first_cooperation": false,
+        "supplier_risk": false,
+        "category_mismatch": false,
+        "frequency_risk": false,
+        "over_budget": false,
+        "supplier_name": "深圳市华科电子有限公司",
+        "supplier_id": 101
+      },
+      "expected": {
+        "risk_level": "low",
+        "risk_score_range": [
+          0,
+          0
+        ],
+        "approval_decision": "approve"
+      }
+    },
+    {
+      "id": 20,
+      "name": "4.9万+新供应商（低风险自动通过）",
+      "purchase_request": {
+        "total_amount": 49000,
+        "first_cooperation": true,
+        "supplier_risk": false,
+        "category_mismatch": false,
+        "frequency_risk": false,
+        "over_budget": false,
+        "supplier_name": "深圳市华科电子有限公司",
+        "supplier_id": 101
+      },
+      "expected": {
+        "risk_level": "low",
+        "risk_score_range": [
+          25,
+          25
+        ],
+        "approval_decision": "approve"
+      }
+    },
+    {
+      "id": 21,
+      "name": "4.9万+新供应商+频次（恰好40-中风险边界）",
+      "purchase_request": {
+        "total_amount": 49000,
+        "first_cooperation": true,
+        "supplier_risk": false,
+        "category_mismatch": false,
+        "frequency_risk": true,
+        "over_budget": false,
+        "supplier_name": "深圳市华科电子有限公司",
+        "supplier_id": 101
+      },
+      "expected": {
+        "risk_level": "medium",
+        "risk_score_range": [
+          40,
+          40
+        ],
+        "approval_decision": "human"
+      }
+    },
+    {
+      "id": 22,
+      "name": "19.9万+新供应商+供应商风险（高风险）",
+      "purchase_request": {
+        "total_amount": 199000,
+        "first_cooperation": true,
+        "supplier_risk": true,
+        "category_mismatch": false,
+        "frequency_risk": false,
+        "over_budget": false,
+        "supplier_name": "深圳市华科电子有限公司",
+        "supplier_id": 101
+      },
+      "expected": {
+        "risk_level": "high",
+        "risk_score_range": [
+          80,
+          80
+        ],
+        "approval_decision": "human"
+      }
+    },
+    {
+      "id": 23,
+      "name": "49万+新供应商+供应商风险（高风险）",
+      "purchase_request": {
+        "total_amount": 490000,
+        "first_cooperation": true,
+        "supplier_risk": true,
+        "category_mismatch": false,
+        "frequency_risk": false,
+        "over_budget": false,
+        "supplier_name": "深圳市华科电子有限公司",
+        "supplier_id": 101
+      },
+      "expected": {
+        "risk_level": "high",
+        "risk_score_range": [
+          95,
+          95
+        ],
+        "approval_decision": "human"
+      }
+    },
+    {
+      "id": 24,
+      "name": "8千+新供应商+品类不符+频次（中风险）",
+      "purchase_request": {
+        "total_amount": 8000,
+        "first_cooperation": true,
+        "supplier_risk": false,
+        "category_mismatch": true,
+        "frequency_risk": true,
+        "over_budget": false,
+        "supplier_name": "深圳市华科电子有限公司",
+        "supplier_id": 101
+      },
+      "expected": {
+        "risk_level": "medium",
+        "risk_score_range": [
+          60,
+          60
+        ],
+        "approval_decision": "human"
+      }
+    },
+    {
+      "id": 25,
+      "name": "50万+新供应商（金额+新供应商组合到高风险）",
+      "purchase_request": {
+        "total_amount": 500000,
+        "first_cooperation": true,
+        "supplier_risk": false,
+        "category_mismatch": false,
+        "frequency_risk": false,
+        "over_budget": false,
+        "supplier_name": "深圳市华科电子有限公司",
+        "supplier_id": 101
+      },
+      "expected": {
+        "risk_level": "high",
+        "risk_score_range": [
+          85,
+          85
+        ],
+        "approval_decision": "human"
+      }
+    }
+  ]
+}
